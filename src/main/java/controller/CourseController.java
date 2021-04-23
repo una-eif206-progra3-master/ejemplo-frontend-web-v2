@@ -40,6 +40,27 @@ public class CourseController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        Course course = new Course();
+        List<Course> courseList = null;
 
+        course.setName(getRequestParameter(request, "name"));
+        course.setStatus(true);
+        course.setThematic(getRequestParameter(request, "thematic"));
+
+        course = courseService.save(course);
+        courseList = courseService.findAll();
+        request.setAttribute("courseList", courseList);
+
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/course.jsp");
+        dispatcher.forward(request, response);
+    }
+
+    protected String getRequestParameter(HttpServletRequest request, String name) {
+        String param = request.getParameter(name);
+        return !param.isEmpty() ? param : getInitParameter(name);
+    }
+
+    protected String getContextParameter(String name) {
+        return getServletContext().getInitParameter(name);
     }
 }
