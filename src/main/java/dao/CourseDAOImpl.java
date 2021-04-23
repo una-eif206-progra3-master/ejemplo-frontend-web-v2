@@ -1,10 +1,13 @@
 package dao;
 
 import model.Course;
+import org.hibernate.FlushMode;
 import org.hibernate.Session;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
+@Transactional
 public class CourseDAOImpl implements CourseDAO {
 
     private final Session session = HibernateUtil.getSessionFactory().openSession();
@@ -19,6 +22,7 @@ public class CourseDAOImpl implements CourseDAO {
         session.beginTransaction();
         session.save(course);
         session.getTransaction().commit();
+        session.refresh(course);
 
         return course;
     }
@@ -29,6 +33,7 @@ public class CourseDAOImpl implements CourseDAO {
         session.beginTransaction();
         session.update(course);
         session.getTransaction().commit();
+        session.refresh(course);
 
         return course;
     }
